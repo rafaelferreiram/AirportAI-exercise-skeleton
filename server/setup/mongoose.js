@@ -1,19 +1,9 @@
-/**
-* Setup MongoDB.
-*/
-'use strict';
-
 let mongoose = require('mongoose');
-const DATABASE_URL = 'mongodb://127.0.0.1:27017/AirportAI';
-
+const DATABASE_URL = 'mongodb://root:root@localhost:27017/AirportAI?authSource=admin&readPreference=primary&appname=MongoDB%20Compass&ssl=false';
 
 module.exports = setup;
 
-/**
-* Sets up MongoDB connection.
-*/
 function setup() {
-
   mongoose.connection.on('connected', function () {
     console.log('MongoDB connected to database.');
   });
@@ -36,23 +26,14 @@ function setup() {
   });
 
   return connectToDb().then(function() {
-
-    // Set up all models.
     require('../models');
     return;
   });
 };
 
-
-/**
-* Connects to the database.
-*/
 function connectToDb() {
-
-  // Use native promises.
   mongoose.Promise = global.Promise;
 
-  // Mongoose connection options.
   const mongoConnectOpts = {
     sslValidate: true,
     checkServerIdentity: true,
@@ -62,13 +43,11 @@ function connectToDb() {
     useUnifiedTopology: true,
     connectTimeoutMS: 5000,
     serverSelectionTimeoutMS: 5000,
-    ha: true, // Make sure the high availability checks are on
-    haInterval: 10000, // Run every 10 seconds
+    ha: true,
+    haInterval: 10000,
   };
 
-  // Connect and return promise.
   return mongoose.connect(DATABASE_URL, mongoConnectOpts).catch(function(err) {
-    // To avoid promise not handled exception.
     console.error('Unable to connect MongoDB. If problem persists, please restart the server. Error: ' + err);
   });
 }

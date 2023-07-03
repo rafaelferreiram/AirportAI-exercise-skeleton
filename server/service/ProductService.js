@@ -50,7 +50,6 @@ class ProductService {
         let searchQuery ;
         if (keywords) {     
             const words = keywords.split(' ').filter(word => word);
-            // Add word boundaries to the keywords to ensure only full words are matched
             const keywordsSplitted = words.map(word => "\\b" + word + "\\b").join('|');
           
             searchQuery = {
@@ -70,6 +69,12 @@ class ProductService {
               $and: [
                 searchQuery,
                 { lost_time: { $gte: new Date(lost_time) } }
+              ]
+            });
+          }else{
+            products = await Product.find({
+              $and: [
+                searchQuery,
               ]
             });
           }

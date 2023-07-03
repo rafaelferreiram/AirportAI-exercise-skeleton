@@ -59,10 +59,10 @@ describe('ProductService', () => {
     });
 
     it('should search products', async () => {
-        const products = [{ name: 'product1' }, { name: 'product2' }];
+        const products = [{ type: 'product1' }, { type: 'product2' }];
         findStub.resolves(products);
 
-        const result = await productService.searchProduct({ body: { message: 'product1' } });
+        const result = await productService.searchProduct({ body: { keywords: 'product1' } });
 
         expect(result).to.deep.equal(products);
     });
@@ -89,7 +89,7 @@ describe('ProductService', () => {
     it('should return an empty array when no products are found', async () => {
         findStub.resolves([]);
 
-        const result = await productService.searchProduct({ body: { message: 'product3' } });
+        const result = await productService.searchProduct({ body: { keywords: 'product3' } });
 
         expect(result).to.deep.equal([]);
     });

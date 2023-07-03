@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "scripts": {
     "start": "node app.js",
+    "dev": "nodemon app.js",
     "test": "NODE_ENV=test nyc --reporter=text --reporter=lcov mocha --recursive --exit test",
     "test-win": "set NODE_ENV=test&& nyc --reporter=text --reporter=lcov mocha --recursive --exit test"
   },
@@ -15,7 +16,7 @@
     "jsonwebtoken": "^9.0.0",
     "lodash": "4.17.21",
     "method-override": "3.0.0",
-    "moment": "2.29.4",
+    "moment": "^2.29.4",
     "moment-timezone": "0.5.35",
     "mongodb-memory-server": "^8.13.0",
     "mongoose": "^5.13.19",

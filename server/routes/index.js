@@ -16,6 +16,7 @@ router.post('/product', isAgent, (req, res) => ProductController.createProduct(r
 router.get('/product', isPassenger, (req, res) => ProductController.listProducts(req, res));
 router.delete('/product/:id', isAgent, (req, res) => ProductController.deleteProduct(req, res));
 router.post('/product/search', isPassenger, (req, res) => ProductController.searchProduct(req, res));
+router.post('/product/:id/found', isAgent, (req, res) => ProductController.foundProduct(req, res));
 
 // Agent routes
 router.post('/agent/login', (req, res, next) => AgentController.login(req, res, next));

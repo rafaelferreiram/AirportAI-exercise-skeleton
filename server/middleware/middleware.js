@@ -9,7 +9,7 @@ const isRole = (role) => async (req, res, next) => {
   }
 
   const token = req.headers?.authorization.split(' ')[1];
-  console.log(token);
+  
 
   if (!token) {
     return res.status(401).json({ message: 'Missing authorization token' });
@@ -23,21 +23,22 @@ const isRole = (role) => async (req, res, next) => {
     if (!agent) {
       return res.status(401).json({ message: `Invalid ${role}` });
     }
-
-    if (agent.role !== role) {
-      return res.status(403).json({ message: 'You are not authorized to perform this operation' });
-    }
-
+    
     if(agent.role === FULL_ROLE_ACCESS){
       req.agentId = agentId;  
       next();
       return;
     }
 
+    if (agent.role !== role) {
+      return res.status(403).json({ message: 'You are not authorized to perform this operation' });
+    }
+
+
     req.agentId = agentId;
     next();
   } catch (error) {
-    console.log(error.message); // Log the error message
+    console.log(error.message); 
     return res.status(401).json({ message: 'Invalid token' });
   }
 };

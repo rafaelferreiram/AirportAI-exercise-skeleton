@@ -1,6 +1,10 @@
 const Product = require('../models/Product');
+const Agent = require('../models/Agent');
+const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
 const winston = require('winston'); 
+const moment = require('moment');
+const SECRET_KEY = '5eb63d320b1a2c1306a6f8d3fe3abc5d';
 
 class ProductService {
     constructor() {
@@ -21,15 +25,16 @@ class ProductService {
         this.logger.info('ProductService.listProducts - end');
         return products;
     };
-    
+
     async createProduct(req) {
-        this.logger.info('ProductService.createProduct - start');
-        const product = new Product(req.body);
-        product.lost_time = new Date();
-        await product.save();
-        this.logger.info('ProductService.createProduct - end');
-        return product;
+      this.logger.info('ProductService.createProduct - start');
+      const product = new Product(req.body);
+      product.lost_time = moment().format('DD/MM/YYYY HH:mm'); // format the current date-time as string
+      await product.save();
+      this.logger.info('ProductService.createProduct - end');
+      return product;
     };
+    
     
     async deleteProduct(req) {
         this.logger.info('ProductService.deleteProduct - start');
@@ -58,9 +63,9 @@ class ProductService {
             };
         }
 
-        if (!lost_time) {
-            products = await Product.find(searchQuery);
-          } else {
+        let lostDateTime;
+        if (lost_time) {
+            lostDateTime = moment(lost_time, 'DD/MM/YYYY HH:mm').toDate();
             products = await Product.find({
               $and: [
                 searchQuery,
@@ -72,6 +77,19 @@ class ProductService {
         this.logger.info('ProductService.searchProduct - end');
         return products.length > 0 ? products : [];
     }
+
+    async foundProduct(req) {
+      this.logger.info('ProductService.foundProduct - start');
+      const productId = mongoose.Types.ObjectId(req.params.id);
+      const product = await Product.findById(productId);
+      const token = req.headers?.authorization.split(' ')[1];    
+      const decodedToken = jwt.verify(token, SECRET_KEY);
+      const agentId = decodedToken._id;
+      const agent = await Agent.findOne({ _id: agentId });
+      product.found_by = agent.username;      
+      this.logger.info('ProductService.foundProduct - end');
+      return product;
+  };
     
       
 }

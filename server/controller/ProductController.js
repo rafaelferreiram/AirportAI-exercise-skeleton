@@ -28,3 +28,10 @@ exports.searchProduct = async (req, res) => {
     productService.logger.info('ProductController.searchProduct - end');
     res.json(products);
 };
+
+exports.foundProduct = async (req, res) => {
+    productService.logger.info('ProductController.searchProduct - start');
+    const products = await productService.foundProduct(req);
+    productService.logger.info('ProductController.searchProduct - end');
+    res.json(products);
+};

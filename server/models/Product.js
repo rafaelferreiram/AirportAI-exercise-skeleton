@@ -8,7 +8,7 @@ const ProductSchema = new mongoose.Schema({
     lost_time: Date,
     found_time: Date,
     found_by: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: String,
         ref: 'Agent'
     }
 });
